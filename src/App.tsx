@@ -1,30 +1,23 @@
-import { useRef, useState } from "react";
-// import { Peer } from "peerjs";
+import { useRef } from "react";
+import SharingLink from "./components/SharingLink.tsx";
+import fetchOrCreateSessionId from "./lib/fetchOrCreateSessionId.tsx";
 import "./App.css";
+// import { Peer } from "peerjs";
 
 function App() {
   const clientId = useRef(crypto.randomUUID());
 
-  let currentSession;
-  if (window.location.search.includes("?")) {
-    currentSession = window.location.search.substring(1);
-  } else {
-    currentSession = crypto.randomUUID();
-  }
-
-  const [text, setText] = useState<string>("");
-  const [sessionId, setSessionId] = useState<string | null>(currentSession);
+  const searchParams = window.location.search;
+  const currentSessionId = fetchOrCreateSessionId(searchParams);
+  const sessionId = useRef(currentSessionId);
 
   // const peer = new Peer(sessionId as UUID);
   return (
     <>
       <h1>Peer to Peer</h1>
       <div>client UUID: {clientId.current}</div>
-      <div>session id: {sessionId}</div>
-      <h2>Create a session</h2>
-      <p>Either paste a session in or create your own and share it</p>
-      <input onChange={(e) => setText(e.target.value)}></input>
-      <button onClick={() => setSessionId(text)}>Submit</button>
+      <div>session id: {sessionId.current}</div>
+      <SharingLink sessionId={sessionId.current} />
     </>
   );
 }
