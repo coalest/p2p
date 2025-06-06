@@ -5,8 +5,15 @@ import "./App.css";
 function App() {
   const clientId = useRef(crypto.randomUUID());
 
+  let currentSession;
+  if (window.location.search.includes("?")) {
+    currentSession = window.location.search.substring(1);
+  } else {
+    currentSession = crypto.randomUUID();
+  }
+
   const [text, setText] = useState<string>("");
-  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [sessionId, setSessionId] = useState<string | null>(currentSession);
 
   // const peer = new Peer(sessionId as UUID);
   return (
